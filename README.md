@@ -9,9 +9,10 @@ Caution: Be sure to use the project in a dedicated network where users are
 informed and aware that everything is displayed on a screen! 
 Otherwise you might face legal consequences!
 
-We have used this project as part of the "[Chaos macht Schule](http://ulm.ccc.de/ChaosMachtSchule)" 
-program of the german CCC. We give presentations in schools to raise awareness 
-of privacy issues or data capturing on social networks and the internet.
+We want to use this project as part of the "[Chaos macht Schule](http://ulm.ccc.de/ChaosMachtSchule)" 
+program. The aim of this project is to give presentations in schools to raise 
+awareness on privacy/security issues and data exposure in social networks and
+the internet.
 
 As part of the programm we set up a beamer with the slideshow and a dedicated 
 wireless network. During the presentation we plan to hand out smartphones with
@@ -29,7 +30,8 @@ pre-installed apps and let the pupils experiment with them.
 	# start capturing on en1
 	sudo node showit.js -i en1
 	
-	# start processing	
+	# open the graphical frontend in your browser
+	# http://localhost:8080/...
 
 
 # Screenshot
