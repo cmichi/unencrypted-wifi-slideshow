@@ -2,7 +2,7 @@
 
 This project aims on encouraging privacy awareness. It displays unencrypted 
 traffic over wireless networks in a slideshow manner.
-Interesting content like facebook photos, icq messages or mail subjects 
+Interesting content like Facebook photos, ICQ messages or Mail subjects 
 is/should be (still a todo) prioritized.
 
 Caution: Be sure to use the project in a dedicated network where users are
@@ -14,8 +14,8 @@ program of the german CCC. We give presentations in schools to raise awareness
 of privacy issues or data capturing on social networks and the internet.
 
 As part of the programm we set up a beamer with the slideshow and a dedicated 
-wireless network. While we give our presentation we hand out smartphones with
-some pre-installed apps and let the pupils play with them.
+wireless network. During the presentation we plan to hand out smartphones with
+pre-installed apps and let the pupils experiment with them.
 		
 		
 # Run it!
@@ -33,6 +33,8 @@ some pre-installed apps and let the pupils play with them.
 
 
 # Screenshot
+
+ToDo
 
 
 # ToDo
