@@ -18,12 +18,16 @@ var fs = require("fs");
 var tmp_path = '/Users/michi/projects/creative-coding/code/unencrypted-wifi-slideshow/tmp/';
 var bodies = [];
 var files = 0;
+var cnt = 0;
 
 var mime_types = {
   "image/png" : ".png",
   "image/jpeg": ".jpeg",
   "image/jpg": ".jpg"
 };
+
+
+var im = require('imagemagick');
 
 var io = require('socket.io');
 var express = require('express');
@@ -369,7 +373,7 @@ function setup_listeners() {
 
 	    session._writerBuffer = new buffer.Buffer(parseInt(clength));
 	    session._writerBuffer._pos = 0; // where to write
-	    session._path = tmp_path + (new Date).getTime() + ext;
+	    session._path = (new Date).getTime() + (++cnt) + ext;
 		console.log('written');
 	/*
         if (! filter_match(http)) {
@@ -392,8 +396,15 @@ function setup_listeners() {
 	        console.log("buffer overflow");
 	      }
 	      data.copy(session._writerBuffer, session._writerBuffer._pos);
-	      session._writerBuffer._pos += data.length;
+	
+
+			      session._writerBuffer._pos += data.length;
+	
+	
 	      console.log(session._path + " < " + session._writerBuffer._pos + '/' + session._writerBuffer.length);
+	
+	
+	      
 	    }/* else {
 			console.log('fehler hier');		
 		} */
@@ -403,23 +414,33 @@ function setup_listeners() {
 
 	  if (session._writerBuffer) {
 	      if (session._writerBuffer._pos != session._writerBuffer.length) {
-	        console.log("wtf ?");
+	        console.log("file was not completely written!");
+			return;
 	      }
-	      var filepath = session._path;
+	      var filepath = tmp_path + session._path;
 
-	      console.log("Writing " + filepath);
+	      console.log("Writing " + filepath + ", " + session._writerBuffer.length);
+
 	      writer = fs.createWriteStream(filepath);
 	      writer.write(session._writerBuffer);
+	
 	      writer.on("drain", function() {
 	        writer.end();
+	delete session._writerBuffer;
 	        console.log("Done with " + filepath);
 	
-	for (var index in sockets) {
-		sockets[index].emit('news', { holla: 'aimgo' });
-		console.log('broadcasting');
-	}
+			im.identify(filepath, function(err, features){
+			  if (err) throw err;
+			 console.log(features);
+			
+				for (var index in sockets) {
+					sockets[index].emit('news', { path: session._path, width : features.width, height : features.height });
+					console.log('broadcasting');
+				}
+			
+			})	
 		
-	        delete session._writerBuffer;
+	       
 	      });
 	    } /* else {
 			console.log('no buffer');

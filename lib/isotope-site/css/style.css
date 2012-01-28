@@ -227,8 +227,12 @@ body {
 }
 
 .variable-sizes .element.width2 { width: 230px; }
-
 .variable-sizes .element.height2 { height: 230px; }
+
+
+.variable-sizes .element.width3 { width: 330px; }
+.variable-sizes .element.height3 { height: 330px; }
+
 
 .variable-sizes .element.width2.height2 {
   font-size: 2.0em;

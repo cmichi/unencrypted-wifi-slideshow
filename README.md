@@ -1,4 +1,4 @@
-# Readme
+# Unencrypted WiFi Slideshow
 
 This project aims on encouraging privacy awareness. It displays unencrypted 
 traffic over wireless networks in a slideshow manner.

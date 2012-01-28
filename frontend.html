@@ -16,7 +16,7 @@
   
   <div id="container" class="variable-sizes clearfix">
     
-          
+          <!--
     <div class="element other nonmetal   " data-symbol="H" data-category="other">
       <p class="number">1</p>
       <h3 class="symbol">H</h3>
@@ -175,6 +175,7 @@
       <h2 class="name">Calcium</h2>
       <p class="weight">40.078</p>
     </div>
+-->
     
   </div> <!-- #container -->
   
@@ -259,23 +260,60 @@
     });
 
 
-	function addNew(imgPath) {
+
+	var displaying = [];
+
+
+	function addNew(data) {
 		//alert('./lib/isotope-site/tmp/' + imgPath);
+		/*
 		var $newItems = $('<div class="element halogen nonmetal   " data-symbol="Cl" data-category="halogen"><p class="number">17</p>      <h3 class="symbol">Cl</h3>      <h2 class="name">Chlorine</h2>      <p class="weight">35.453</p>    </div>');
 		$('#container').append( $newItems ).isotope( 'insert', $newItems );
 		var $newItems = $('<div class="element halogen nonmetal width2 height2   " data-symbol="Cl" data-category="halogen"><p class="number">17</p>      <h3 class="symbol">Cl</h3>      <h2 class="name">Chlorine</h2>      <p class="weight">35.453</p>    </div>');
 		$('#container').append( $newItems ).isotope( 'insert', $newItems );
 		var $newItems = $('<div class="element halogen nonmetal width2 height2   " data-symbol="Cl" data-category="halogen"><p class="number">17</p>      <h3 class="symbol">Cl</h3>      <h2 class="name">Chlorine2</h2>      <p class="weight">35.453</p>    </div>');
 		$('#container').append( $newItems ).isotope( 'insert', $newItems );
-		var $newItems = $('<div class="element halogen nonmetal width2 height2   " data-symbol="Cl" data-category="halogen"><p class="number">17</p>      <h3 class="symbol">Cl</h3>      <h2 class="name">Chlorine3</h2>      <p class="weight">35.453</p>    </div>');
-		$('#container').append( $newItems ).isotope( 'insert', $newItems );
+		var $newItems = $('<div class="element halogen nonmetal width2 height2" data-symbol="Cl" data-category="halogen"><p class="number">17</p>      <h3 class="symbol">Cl</h3>      <h2 class="name">Chlorine3</h2>      <p class="weight">35.453</p>    </div>');
+		var $newItems = $('<div class="element halogen nonmetal width2 height2" data-symbol="Cl" data-category="halogen"><img src="'+imgPath+'" /></div>');
+		*/
+		
+		var sizeOptWidth = '';
+		var sizeOptHeight = '';
+		
+		if (data.width > 110) sizeOptWidth = 2;
+		//if (data.width > 230) sizeOptWidth = 3;
+		
+		if (data.height > 110) sizeOptHeight = 2;
+		//if (data.height > 230) sizeOptHeight = 3;
+		
+		
+		
+		var item = '<div class="element halogen nonmetal width'+sizeOptWidth+' height'+sizeOptHeight+'" data-symbol="Cl" data-category="halogen">' +
+		 		   '<img src="./tmp/' + data.path + '" />' +
+				   '</div>';
+				
+		
+		if (!displaying.inArray(data.path)) {
+			$('#container').append( $(item) ).isotope( 'insert', $(item) );
+			displaying.push(data.path);
+		}
+	}
+
+
+	Array.prototype.inArray = function(value) {
+		console.log(this);
+		for (var index in this) {
+			if (this[index] === value)
+				return true;
+		}
+		return false;
 	}
 
 	onFull = function() {
 		// remove sth
 	}
 
-	window.setTimeout("addNew('1312549374025.jpeg');", 1000);
+//	window.setTimeout("addNew('1312549374025.jpeg');", 1000);
   </script>
   
     
@@ -284,6 +322,7 @@
   var socket = io.connect('http://localhost:1337');
   socket.on('news', function (data) {
     console.log(data);
+	addNew(data);
     //socket.emit('my other event', { my: 'data' });
   });
 </script>
