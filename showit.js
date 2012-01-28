@@ -8,14 +8,14 @@ written by Matthew Ranney.
 var sys       = require("util"),
     node_http = require('http'),
     node_url  = require('url'),
-    pcap      = require("./node_pcap/pcap"), pcap_session,
-buffer = require('buffer'),
+    pcap      = require("./lib/node_pcap/pcap"), 
+	pcap_session,
+	buffer = require('buffer'),
     ANSI,
     options   = {};
 
 var fs = require("fs");
-var tmp_path = './tmp/';
-tmp_path = '~/projects/creative-coding/code/privacy-awareness/tmp/';
+var tmp_path = '/Users/michi/projects/creative-coding/code/unencrypted-wifi-slideshow/tmp/';
 var bodies = [];
 var files = 0;
 
@@ -24,6 +24,28 @@ var mime_types = {
   "image/jpeg": ".jpeg",
   "image/jpg": ".jpg"
 };
+
+var io = require('socket.io');
+var express = require('express');
+var app = express.createServer()
+  , io = io.listen(app);
+
+app.listen(1337);
+
+var sockets = [];
+
+io.sockets.on('connection', function (socket) {
+	sockets.push(socket);
+	
+  socket.emit('news', { hello: 'world' });
+/*
+  socket.on('my other event', function (data) {
+    console.log(data);
+  });
+*/
+});
+
+
 
 ANSI = (function () {
     // http://en.wikipedia.org/wiki/ANSI_escape_code
@@ -391,6 +413,12 @@ function setup_listeners() {
 	      writer.on("drain", function() {
 	        writer.end();
 	        console.log("Done with " + filepath);
+	
+	for (var index in sockets) {
+		sockets[index].emit('news', { holla: 'aimgo' });
+		console.log('broadcasting');
+	}
+		
 	        delete session._writerBuffer;
 	      });
 	    } /* else {

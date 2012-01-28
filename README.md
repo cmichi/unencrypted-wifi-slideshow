@@ -17,7 +17,20 @@ the internet.
 As part of the programm we set up a beamer with the slideshow and a dedicated 
 wireless network. During the presentation we plan to hand out smartphones with
 pre-installed apps and let the pupils experiment with them.
+
+Current state: Definitely Work-In-Progress! 
+I am developing under Mac OS X and as far as I know it currently doesn't work
+on other operating systems.
 		
+
+# Install it
+
+Install [node.js](https://github.com/joyent/node). I am working with v0.6.6.
+Install dependencies:
+
+	npm install socket.io
+	npm install express
+
 		
 # Run it!
 
@@ -27,16 +40,14 @@ pre-installed apps and let the pupils experiment with them.
 	# temporary folder for media content
 	mkdir tmp 
 	
+	# edit the file showit.js:
+	# var tmp_path = 'PATH_TO_YOUR_TMP';
+	
 	# start capturing on en1
 	sudo node showit.js -i en1
 	
 	# open the graphical frontend in your browser
-	# http://localhost:8080/...
-
-
-# Screenshot
-
-ToDo
+	file://.../unencrypted-wifi-slideshow/frontend.html
 
 
 # ToDo
@@ -50,13 +61,15 @@ ToDo
 # Libraries
 
  * [node_pcap](https://github.com/mranney/node_pcap)
+ * [socket.io](https://github.com/LearnBoost/socket.io)
+ * [isotope](https://github.com/desandro/isotope)
 
 
 # License
 
 This project is licensed under MIT:
 
-	Copyright (c) 2011 
+	Copyright (c) 2012
 	
 		Michael Mueller <http://micha.elmueller.net/>
 	
