@@ -3,7 +3,7 @@ var socket = io.connect('http://localhost:1337');
 var displaying = new Array();
 var queue = new Array();
 var blocking = false;
-
+var currDisplaying = new Array();
 
 $(document).ready(function() {
 	var $container = $('#container');
@@ -18,12 +18,11 @@ $(document).ready(function() {
 			duration: 0,
 			queue: false,
 			complete: function() {
-			//	console.log('no animation..');
+				// console.log('no animation..');
 			}
 		},
 		resizable: false, // disable normal resizing
 		
-
 		masonry: { 
 			columnWidth: foo
 			/*
@@ -74,9 +73,10 @@ function addNew() {
 
 	if (data.width > 450) sizeOptWidth = 4;	
 	if (data.height > 450) sizeOptHeight = 4;
-
 	
-	var item = $('<div class="element width' + 
+	var id = data.path.match(/^\d+/gi);
+	
+	var item = $('<div id="' + id + '" style="display:block" class="element width' + 
 				sizeOptWidth+' height' + sizeOptHeight + 
 				'">' +
 	 		   '<img src="./tmp/' + data.path + '" />' +
@@ -86,10 +86,53 @@ function addNew() {
 		displaying.push(data.path);
 		blocking = true;
 		
-		console.log('appending ' + data.path);
+		insert(item, '#' + id);
 		
-		$('#container').isotope( 'insert', item );
+//		console.log('appending ' + data.path);
+		
+//		console.log('next y is.. ' + $('#container').isotope( 'foo', item) );
+		/*
+		$('#container').isotope( 'insert', item, function() {
+//			console.log( 'height:' +  $('#container').height() );			
+			
+//			insert(el);
+			
+			
+			console.log($('#' + data.path).attr(''));
+			
+		} );
+		*/
+		
+		
 		blocking = false;
+	}
+}
+
+function insert(item, sel) {
+	/* in welcher row steckt das Ganze? */
+	$('#container').isotope( 'insert', item, function() {
+		checkInsert(item, sel);
+	});
+}
+
+function checkInsert(item, sel) {
+	var top = $(sel).css('top').replace("px","");			
+	console.log('here: ' + top);
+	
+	if (top > 200) {
+		// das aktuelle löschen
+		var $removable = $('#container').find( sel );
+        $('#container').isotope( 'remove', $removable );
+
+		var oldSel = currDisplaying.shift();		
+		console.log('remove sth old! ' + oldSel)
+		// so lange alte rauslöschen, bis es reinpasst
+		var $removable = $('#container').find( oldSel );
+        $('#container').isotope( 'remove', $removable );
+
+		insert(item, sel);
+	} else {
+		currDisplaying.push(sel);
 	}
 }
 

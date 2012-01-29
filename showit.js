@@ -5,6 +5,11 @@ written by Matthew Ranney.
 
 /*global process require exports setInterval console */
 
+var im = require('imagemagick');
+var io = require('socket.io');
+var express = require('express');
+var fs = require("fs");
+
 var sys       = require("util"),
     node_http = require('http'),
     node_url  = require('url'),
@@ -14,13 +19,10 @@ var sys       = require("util"),
     ANSI,
     options   = {};
 
-var fs = require("fs");
 
-var tmp_path = '/Users/michi/projects/creative-coding/code/unencrypted-wifi-slideshow/tmp/';
-var bodies = [];
-var files = 0;
+var tmp_path = './tmp/';
 var cnt = 0;
-
+var sockets = [];
 var mime_types = {
   "image/png" : ".png",
   "image/jpeg": ".jpeg",
@@ -28,11 +30,6 @@ var mime_types = {
 };
 
 
-var im = require('imagemagick');
-
-var io = require('socket.io');
-
-var express = require('express');
 var app = express.createServer()
   , io = io.listen(app);
 
@@ -40,20 +37,10 @@ io.configure(function(){
   io.set('log level', 1);
 });
 
-
 app.listen(1337);
-
-var sockets = [];
 
 io.sockets.on('connection', function (socket) {
 	sockets.push(socket);
-	
-//  socket.emit('news', { hello: 'world' });
-/*
-  socket.on('my other event', function (data) {
-    console.log(data);
-  });
-*/
 });
 
 

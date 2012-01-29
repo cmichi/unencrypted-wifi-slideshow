@@ -743,7 +743,7 @@
       });
       
     },
-    
+
     // convienence method for working with Infinite Scroll
     appended : function( $content, callback ) {
       var instance = this;
