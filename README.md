@@ -56,6 +56,10 @@ Install dependencies:
  * Blacklist "special" sites
  * Log everything to as JSON file, load that file at startup.
    This way unexpected shutdowns can be handled.
+ * Add possibility to set the slideshow up via a proxy.  
+   This way legal problems could be avoided by handing out Smartphones
+   which have the proxy globally enabled. Preventing applications from 
+   using https could also be done by the proxy!
 
 
 # Libraries
