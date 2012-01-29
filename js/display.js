@@ -3,14 +3,15 @@ var socket = io.connect('http://localhost:1337');
 var displaying = new Array();
 var queue = new Array();
 var blocking = false;
-var currDisplaying = new Array();
+
+var fixedSizeY = 800;
+
 
 $(document).ready(function() {
 	var $container = $('#container');
 	
 	var foo = 50;
 	
-
 	$container.isotope({
 		itemSelector : '.element',
 		animationEngine: 'jquery',
@@ -25,20 +26,6 @@ $(document).ready(function() {
 		
 		masonry: { 
 			columnWidth: foo
-			/*
-			, masonryHorizontal : {
-				rowHeight: foo
-			}
-			
-			, cellsByRow : {
-				columnWidth : foo,
-				rowHeight : foo
-			}
-			, cellsByColumn : {
-				columnWidth : foo,
-				rowHeight : foo
-			}
-			*/
 		}
 	});
 
@@ -77,36 +64,17 @@ function addNew() {
 	var id = data.path.match(/^\d+/gi);
 	
 	var item = $('<div id="' + id + '" style="display:block" class="element width' + 
-				sizeOptWidth+' height' + sizeOptHeight + 
-				'">' +
+				sizeOptWidth+' height' + sizeOptHeight + '">' +
 	 		   '<img src="./tmp/' + data.path + '" />' +
 			   '</div>');
 			
-	if (!displaying.inArray(data.path) && blocking === false) {			
-		displaying.push(data.path);
-		blocking = true;
-		
+	if (!displaying.inArray('#' + data.path.match(/^\d+/gi)) && blocking === false) {					
+		blocking = true;		
 		insert(item, '#' + id);
-		
-//		console.log('appending ' + data.path);
-		
-//		console.log('next y is.. ' + $('#container').isotope( 'foo', item) );
-		/*
-		$('#container').isotope( 'insert', item, function() {
-//			console.log( 'height:' +  $('#container').height() );			
-			
-//			insert(el);
-			
-			
-			console.log($('#' + data.path).attr(''));
-			
-		} );
-		*/
-		
-		
 		blocking = false;
 	}
 }
+
 
 function insert(item, sel) {
 	/* in welcher row steckt das Ganze? */
@@ -115,24 +83,28 @@ function insert(item, sel) {
 	});
 }
 
+
 function checkInsert(item, sel) {
-	var top = $(sel).css('top').replace("px","");			
-	console.log('here: ' + top);
+	var top = parseInt($(sel).css('top').replace("px",""));			
+	var height = parseInt($(sel).height());			
+	console.log('top: ' + top + ", height:" + height + '. ' + parseInt(top + height) + ' > ' + fixedSizeY);
 	
-	if (top > 200) {
-		// das aktuelle löschen
+	if ((top + height) > fixedSizeY) {
+		// delete the newly inserted elements
 		var $removable = $('#container').find( sel );
         $('#container').isotope( 'remove', $removable );
 
-		var oldSel = currDisplaying.shift();		
-		console.log('remove sth old! ' + oldSel)
-		// so lange alte rauslöschen, bis es reinpasst
+		var oldSel = displaying.shift();		
+		console.log('removing old element: ' + oldSel);
+		
+		// delete the oldest element 
 		var $removable = $('#container').find( oldSel );
         $('#container').isotope( 'remove', $removable );
 
+		// then try inserting the new one again
 		insert(item, sel);
 	} else {
-		currDisplaying.push(sel);
+		displaying.push(sel);
 	}
 }
 
@@ -151,13 +123,13 @@ Array.prototype.inArray = function(value) {
 }	
 
 
-window.setInterval("addNew();", 200);
-
 socket.on('news', function (data) {
 	console.log(data);
 
-	if (!queue.inArray(data) && !displaying.inArray(data.path)) { 
+	if (!queue.inArray(data) && !displaying.inArray('#' + data.path.match(/^\d+/gi))) { 
 		queue.push(data);
 		console.log("new file: " + data.path);
 	}
 });
+
+window.setInterval("addNew();", 200);
