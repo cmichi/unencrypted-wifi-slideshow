@@ -15,6 +15,7 @@ var sys       = require("util"),
     options   = {};
 
 var fs = require("fs");
+
 var tmp_path = '/Users/michi/projects/creative-coding/code/unencrypted-wifi-slideshow/tmp/';
 var bodies = [];
 var files = 0;
@@ -30,9 +31,15 @@ var mime_types = {
 var im = require('imagemagick');
 
 var io = require('socket.io');
+
 var express = require('express');
 var app = express.createServer()
   , io = io.listen(app);
+
+io.configure(function(){
+  io.set('log level', 1);
+});
+
 
 app.listen(1337);
 
@@ -354,13 +361,13 @@ function setup_listeners() {
 	      clength = http.response.headers["Content-Length"],
 	      ext;
 	
-	    console.log("\nok: " + JSON.stringify(http.response.headers));
+//	    console.log("\nok: " + JSON.stringify(http.response.headers));
 	    if (head) {
 	      head = head.split(';')[0]
 	      ext = mime_types[head];
 	      session._ext = ext;
 	    }
-	    console.log(encoding + ", ", ext);
+	   // console.log(encoding + ", ", ext);
 
 	    //_p([http.request.headers.Host, http.request.url]);
 	    // TODO: handle gzip Content-Encoding
@@ -369,25 +376,10 @@ function setup_listeners() {
 
 	    // Missing Content-Lenght
 	    if (!clength) { _p("Missing content-length"); return }
-		console.log('http response ' + ext);
 
 	    session._writerBuffer = new buffer.Buffer(parseInt(clength));
 	    session._writerBuffer._pos = 0; // where to write
 	    session._path = (new Date).getTime() + (++cnt) + ext;
-		console.log('written');
-	/*
-        if (! filter_match(http)) {
-            return;
-        }
-
-        console.log(format_line_start(session.current_cap_time, session.dst_name, session.src_name) +
-            " #" + session.http_request_count + " HTTP " + http.response.http_version + " response: " +
-            ANSI(http.response.status_code + " " + node_http.STATUS_CODES[http.response.status_code], "yellow"));
-
-        if (options.headers) {
-            console.log(format_headers(http.response.headers));
-        }
-*/
     });
 
     tcp_tracker.on('http response body', function (session, http, data) {
@@ -396,18 +388,9 @@ function setup_listeners() {
 	        console.log("buffer overflow");
 	      }
 	      data.copy(session._writerBuffer, session._writerBuffer._pos);
-	
-
-			      session._writerBuffer._pos += data.length;
-	
-	
-	      console.log(session._path + " < " + session._writerBuffer._pos + '/' + session._writerBuffer.length);
-	
-	
-	      
-	    }/* else {
-			console.log('fehler hier');		
-		} */
+			session._writerBuffer._pos += data.length;
+			// console.log(session._path + " < " + session._writerBuffer._pos + '/' + session._writerBuffer.length);
+	    }
     });
 
     tcp_tracker.on('http response complete', function (session, http) {
@@ -419,34 +402,34 @@ function setup_listeners() {
 	      }
 	      var filepath = tmp_path + session._path;
 
-	      console.log("Writing " + filepath + ", " + session._writerBuffer.length);
+			//   console.log("Writing " + filepath + ", " + session._writerBuffer.length);
 
 	      writer = fs.createWriteStream(filepath);
+		writer.on('error', function(err){
+		      console.log('error handled in file reader: ' + err);
+		});
+	
 	      writer.write(session._writerBuffer);
 	
 	      writer.on("drain", function() {
 	        writer.end();
-	delete session._writerBuffer;
-	        console.log("Done with " + filepath);
+			delete session._writerBuffer;
 	
 			im.identify(filepath, function(err, features){
-//			  if (err) throw err;
 				if (!err) {
-			 		console.log(features);
+					console.log('broadcasting ' + filepath);
 			
 					for (var index in sockets) {
 						sockets[index].emit('news', { path: session._path, width : features.width, height : features.height });
-						console.log('broadcasting');
 					}
+				} else {
+					console.log(err)
 				}
 			})	
 		
 	       
 	      });
-	    } /* else {
-			console.log('no buffer');
-		} */
-	
+	    }	
     });
 
 }

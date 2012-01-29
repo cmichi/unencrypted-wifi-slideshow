@@ -245,6 +245,12 @@ border:1px solid #006fc0;
 .variable-sizes .element.width3 { width: 348px; }
 .variable-sizes .element.height3 { height: 348px; }
 
+.variable-sizes .element.width4 { width: 448px; }
+.variable-sizes .element.height4 { height: 448px; }
+
+.variable-sizes .element.width5 { width: 248px; }
+.variable-sizes .element.height5 { height: 248px; }
+
 
 .variable-sizes .element.width2.height2 {
   font-size: 2.0em;

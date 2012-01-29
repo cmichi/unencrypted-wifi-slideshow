@@ -18,7 +18,7 @@ $(document).ready(function() {
 			duration: 0,
 			queue: false,
 			complete: function() {
-				console.log('no animation..');
+			//	console.log('no animation..');
 			}
 		},
 		resizable: false, // disable normal resizing
@@ -66,8 +66,14 @@ function addNew() {
 	if (data.width > 200) sizeOptWidth = 2;
 	if (data.height > 200) sizeOptHeight = 2;
 
-	if (data.width > 350) sizeOptWidth = 2;	
-	if (data.height > 350) sizeOptHeight = 2;
+	if (data.width > 250) sizeOptWidth = 5;
+	if (data.height > 250) sizeOptHeight = 5;
+
+	if (data.width > 350) sizeOptWidth = 3;	
+	if (data.height > 350) sizeOptHeight = 3;
+
+	if (data.width > 450) sizeOptWidth = 4;	
+	if (data.height > 450) sizeOptHeight = 4;
 
 	
 	var item = $('<div class="element width' + 
@@ -84,14 +90,6 @@ function addNew() {
 		
 		$('#container').isotope( 'insert', item );
 		blocking = false;
-		
-		/*
-		$('#container').append( $(item) ).isotope( 'insert', $(item) , function() {
-			//console.log('fertisch');
-			blocking = false;
-			displaying.push(data.path);
-		});
-		*/
 	}
 }
 
@@ -110,7 +108,7 @@ Array.prototype.inArray = function(value) {
 }	
 
 
-window.setInterval("addNew();", 1000);
+window.setInterval("addNew();", 200);
 
 socket.on('news', function (data) {
 	console.log(data);
