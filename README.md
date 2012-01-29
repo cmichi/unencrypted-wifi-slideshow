@@ -30,6 +30,7 @@ Install dependencies:
 
 	npm install socket.io
 	npm install express
+	npm install imagemagick
 
 		
 # Run it!
@@ -66,6 +67,7 @@ Install dependencies:
 
  * [node_pcap](https://github.com/mranney/node_pcap)
  * [socket.io](https://github.com/LearnBoost/socket.io)
+ * [imagemagick](https://github.com/rsms/node-imagemagick)
  * [isotope](https://github.com/desandro/isotope)
 
 

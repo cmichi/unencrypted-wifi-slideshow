@@ -6,8 +6,10 @@ var blocking = false;
 
 
 $(document).ready(function() {
-	var foo = 120;
 	var $container = $('#container');
+	
+	var foo = 50;
+	
 
 	$container.isotope({
 		itemSelector : '.element',
@@ -20,20 +22,24 @@ $(document).ready(function() {
 			}
 		},
 		resizable: false, // disable normal resizing
+		
 
 		masonry: { 
-			columnWidth: foo,
-			masonryHorizontal : {
+			columnWidth: foo
+			/*
+			, masonryHorizontal : {
 				rowHeight: foo
-			},
-			cellsByRow : {
-				columnWidth : foo*2,
-				rowHeight : foo*2
-			},
-			cellsByColumn : {
-				columnWidth : foo*2,
-				rowHeight : foo*2
 			}
+			
+			, cellsByRow : {
+				columnWidth : foo,
+				rowHeight : foo
+			}
+			, cellsByColumn : {
+				columnWidth : foo,
+				rowHeight : foo
+			}
+			*/
 		}
 	});
 
@@ -51,18 +57,22 @@ function addNew() {
 	if (queue.length < 1) return;
 	if ((data = queue.shift()) == 'undefined') return;
 		
-	var sizeOptWidth = '';
-	var sizeOptHeight = '';
+	var sizeOptWidth = '0';
+	var sizeOptHeight = '0';
 	
-	if (data.width > 110) sizeOptWidth = 2;
-	//if (data.width > 230) sizeOptWidth = 3;
+	if (data.width > 100) sizeOptWidth = 1;
+	if (data.height > 100) sizeOptHeight = 1;
+
+	if (data.width > 200) sizeOptWidth = 2;
+	if (data.height > 200) sizeOptHeight = 2;
+
+	if (data.width > 350) sizeOptWidth = 2;	
+	if (data.height > 350) sizeOptHeight = 2;
+
 	
-	if (data.height > 110) sizeOptHeight = 2;
-	//if (data.height > 230) sizeOptHeight = 3;
-	
-	var item = $('<div class="element halogen nonmetal width' + 
+	var item = $('<div class="element width' + 
 				sizeOptWidth+' height' + sizeOptHeight + 
-				'" data-symbol="Cl" data-category="halogen">' +
+				'">' +
 	 		   '<img src="./tmp/' + data.path + '" />' +
 			   '</div>');
 			
@@ -98,6 +108,7 @@ Array.prototype.inArray = function(value) {
 	}
 	return false;
 }	
+
 
 window.setInterval("addNew();", 1000);
 

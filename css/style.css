@@ -156,22 +156,25 @@ body {
 
 #container {
 /*  border: 1px solid #666; */
-  padding: 5px;
-/*  margin-bottom: 20px; */
+/*  padding: 5px;
+  margin-bottom: 20px; */
 }
 
 .element {
-  width: 110px;
-  height: 110px;
-  margin: 5px;
+  width: 50px;
+  height: 50px;
+  margin: 0px;
   float: left;
   overflow: hidden;
   position: relative;
-  background: #888;
+border:1px solid #006fc0;
+  background: #fff;
   color: #222;
+/*
   -webkit-border-top-right-radius: 1.2em;
       -moz-border-radius-topright: 1.2em;
           border-top-right-radius: 1.2em;
+*/
 }
 
 .element.alkali          { background: #F00; background: hsl(   0, 100%, 50%); }
@@ -226,12 +229,21 @@ body {
   top: 0.5em;
 }
 
-.variable-sizes .element.width2 { width: 230px; }
-.variable-sizes .element.height2 { height: 230px; }
 
 
-.variable-sizes .element.width3 { width: 330px; }
-.variable-sizes .element.height3 { height: 330px; }
+.variable-sizes .element.width0 { width: 48px; }
+.variable-sizes .element.height0 { height: 48px; }
+
+.variable-sizes .element.width1 { width: 98px; }
+.variable-sizes .element.height1 { height: 98px; }
+
+
+.variable-sizes .element.width2 { width: 198px; }
+.variable-sizes .element.height2 { height: 198px; }
+
+
+.variable-sizes .element.width3 { width: 348px; }
+.variable-sizes .element.height3 { height: 348px; }
 
 
 .variable-sizes .element.width2.height2 {

@@ -430,14 +430,15 @@ function setup_listeners() {
 	        console.log("Done with " + filepath);
 	
 			im.identify(filepath, function(err, features){
-			  if (err) throw err;
-			 console.log(features);
+//			  if (err) throw err;
+				if (!err) {
+			 		console.log(features);
 			
-				for (var index in sockets) {
-					sockets[index].emit('news', { path: session._path, width : features.width, height : features.height });
-					console.log('broadcasting');
+					for (var index in sockets) {
+						sockets[index].emit('news', { path: session._path, width : features.width, height : features.height });
+						console.log('broadcasting');
+					}
 				}
-			
 			})	
 		
 	       
