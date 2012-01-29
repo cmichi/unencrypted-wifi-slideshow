@@ -1,6 +1,6 @@
 # Unencrypted WiFi Slideshow
 
-This project aims on encouraging privacy awareness. It displays unencrypted 
+This project aims on raising privacy awareness. It displays unencrypted 
 traffic over wireless networks in a slideshow manner.
 Interesting content like Facebook photos, ICQ messages or Mail subjects 
 is/should be (still a todo) prioritized.
@@ -18,7 +18,7 @@ As part of the programm we set up a beamer with the slideshow and a dedicated
 wireless network. During the presentation we plan to hand out smartphones with
 pre-installed apps and let the pupils experiment with them.
 
-Current state: Definitely Work-In-Progress! 
+**Current state: Definitely Work-In-Progress!**   
 I am developing under Mac OS X and as far as I know it currently doesn't work
 on other operating systems.
 		
