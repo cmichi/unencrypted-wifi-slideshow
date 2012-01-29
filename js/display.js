@@ -4,13 +4,14 @@ var displaying = new Array();
 var queue = new Array();
 var blocking = false;
 
-var fixedSizeY = 800;
+var fixedSizeY;
 
 
 $(document).ready(function() {
 	var $container = $('#container');
-	
 	var foo = 50;
+	
+	fixedSizeY = $container.height();
 	
 	$container.isotope({
 		itemSelector : '.element',
@@ -87,7 +88,7 @@ function insert(item, sel) {
 function checkInsert(item, sel) {
 	var top = parseInt($(sel).css('top').replace("px",""));			
 	var height = parseInt($(sel).height());			
-	console.log('top: ' + top + ", height:" + height + '. ' + parseInt(top + height) + ' > ' + fixedSizeY);
+	//console.log('top: ' + top + ", height:" + height + '. ' + parseInt(top + height) + ' > ' + fixedSizeY);
 	
 	if ((top + height) > fixedSizeY) {
 		// delete the newly inserted elements
@@ -101,7 +102,11 @@ function checkInsert(item, sel) {
 		var $removable = $('#container').find( oldSel );
         $('#container').isotope( 'remove', $removable );
 
-		// then try inserting the new one again
+		// use a longer interval, otherwise the ui will be too fast
+		clearInterval(interval);
+		interval = window.setInterval("addNew();", 800);
+
+		// then try inserting the new one again		
 		insert(item, sel);
 	} else {
 		displaying.push(sel);
@@ -132,4 +137,6 @@ socket.on('news', function (data) {
 	}
 });
 
-window.setInterval("addNew();", 200);
+// until the first time when elements get deleted
+// use a short interval
+var interval = window.setInterval("addNew();", 200);
