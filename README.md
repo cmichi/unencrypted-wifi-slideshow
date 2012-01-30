@@ -23,27 +23,21 @@ I am developing under Mac OS X and -- as far as I know -- it currently doesn't w
 on other operating systems.
 		
 
-# Install it
+# Install & Run
 
 Install [node.js](https://github.com/joyent/node). I am working with v0.6.6.
-Install dependencies:
-
-	npm install socket.io
-	npm install express
-	npm install imagemagick
-
-		
-# Run it!
 
 	git clone https://github.com/cmichi/unencrypted-wifi-slideshow.git
 	cd unencrypted-wifi-slideshow/
 	
+	# Install dependencies
+	npm install socket.io
+	npm install express
+	npm install imagemagick	
+	
 	# temporary folder for media content
 	mkdir tmp 
-	
-	# edit the file showit.js:
-	# var tmp_path = 'PATH_TO_YOUR_TMP';
-	
+		
 	# start capturing on en1
 	sudo node showit.js -i en1
 	
