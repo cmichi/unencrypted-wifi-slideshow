@@ -5,21 +5,21 @@ traffic over wireless networks in a slideshow manner.
 Interesting content like Facebook photos, ICQ messages or Mail subjects 
 is/should be (still a todo) prioritized.
 
-Caution: Be sure to use the project in a dedicated network where users are
+Caution: Be sure to use the project in a dedicated network, where users are
 informed and aware that everything is displayed on a screen! 
 Otherwise you might face legal consequences!
 
 We want to use this project as part of the "[Chaos macht Schule](http://ulm.ccc.de/ChaosMachtSchule)" 
-program. The aim of this project is to give presentations in schools to raise 
-awareness on privacy/security issues and data exposure in social networks and
-the internet.
+program. The goal of the CmS project is to raise awareness on privacy/security
+issues and data exposure in social networks/the internet by giving presentations
+in schools.
 
-As part of the programm we set up a beamer with the slideshow and a dedicated 
+As part of our presentation we set up a beamer with the slideshow and a dedicated 
 wireless network. During the presentation we plan to hand out smartphones with
 pre-installed apps and let the pupils experiment with them.
 
 **Current state: Definitely Work-In-Progress!**   
-I am developing under Mac OS X and as far as I know it currently doesn't work
+I am developing under Mac OS X and -- as far as I know -- it currently doesn't work
 on other operating systems.
 		
 
