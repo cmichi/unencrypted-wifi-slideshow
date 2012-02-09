@@ -45,6 +45,17 @@ Install [node.js](https://github.com/joyent/node). I am working with v0.6.6.
 	file://.../unencrypted-wifi-slideshow/frontend.html
 
 
+# Filtering
+
+For a publicly visible slideshow of the wifi you might want to set up a 
+blacklist of domains. You can do this by updating the config.js:
+
+	exports.blacklists = ["./some-domains", "more-domains"]
+
+The list has to be a text file separated by CRLFs. A publicly available
+list is [URLBlacklist](http://urlblacklist.com/) for example.
+
+
 # ToDo
 
  * Prioritize interesting content (facebook, icq, mail subjects)

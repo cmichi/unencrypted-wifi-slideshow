@@ -9,6 +9,17 @@ var im = require('imagemagick');
 var io = require('socket.io');
 var express = require('express');
 var fs = require("fs");
+var config = require('./config.js');
+
+var blacklists = [];
+if (config.blacklists !== undefined) {
+	console.log('starting');
+	for (var index in config.blacklists) {
+		var cnt = fs.readFileSync(config.blacklists[index], 'utf8');
+		var arr = cnt.split('\n');
+		blacklists = blacklists.concat(arr);
+	}
+}
 
 var sys       = require("util"),
     node_http = require('http'),
@@ -387,11 +398,23 @@ function setup_listeners() {
 	        console.log("file was not completely written!");
 			return;
 	      }
-	      var filepath = tmp_path + session._path;
+		
+		console.log('heere');
+	
+		// are we sure, that site is not blacklisted?
+		if (blacklists.inArray(http.request.headers['Host']) || 
+			blacklists.inArray(http.request.headers['Host'].replace('www.',''))) {
+				console.log('skipping for ' + http.request.headers['Host']);
+				return;
+		}
+		
+		console.log('went clear: ' + http.request.headers['Host']);
+	
+        var filepath = tmp_path + session._path;
 
-			//   console.log("Writing " + filepath + ", " + session._writerBuffer.length);
+  		console.log("Writing " + filepath + ", " + session._writerBuffer.length);
 
-	      writer = fs.createWriteStream(filepath);
+	     writer = fs.createWriteStream(filepath);
 		writer.on('error', function(err){
 		      console.log('error handled in file reader: ' + err);
 		});
@@ -406,8 +429,10 @@ function setup_listeners() {
 				if (!err) {
 					console.log('broadcasting ' + filepath);
 			
-					for (var index in sockets) {
-						sockets[index].emit('news', { path: session._path, width : features.width, height : features.height });
+					if (sockets !== undefined && sockets.length > 0) {
+						for (var index in sockets) {
+							sockets[index].emit('news', { path: session._path, width : features.width, height : features.height });
+						}
 					}
 				} else {
 					console.log(err)
@@ -429,3 +454,21 @@ if (options.help) {
 start_capture_session();
 start_drop_watcher();
 setup_listeners();
+
+
+
+
+Array.prototype.inArray = function(value) {
+	if (this === null) return false;
+	
+	if (this.length === 0) {
+		return false;
+	}
+		
+	for (var index in this) {
+		if (this[index] === value) {
+			return true;
+		}
+	}
+	return false;
+}	
