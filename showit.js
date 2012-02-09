@@ -399,17 +399,21 @@ function setup_listeners() {
 			return;
 	      }
 		
-		console.log('heere');
-	
 		// are we sure, that site is not blacklisted?
-		if (blacklists.inArray(http.request.headers['Host']) || 
-			blacklists.inArray(http.request.headers['Host'].replace('www.',''))) {
-				console.log('skipping for ' + http.request.headers['Host']);
-				return;
+		// strip all subdomain stuff (cdn networks, etc.)
+		var host = http.request.headers['Host'].split('.');
+		
+		if (host.length >= 2) {
+			host = host.slice(-2).join('.');
+		} else {
+			host = http.request.headers['Host'];
 		}
 		
-		console.log('went clear: ' + http.request.headers['Host']);
-	
+		if (blacklists.inArray(host)) {
+				console.log('skipping: ' + host);
+				return;
+		}
+					
         var filepath = tmp_path + session._path;
 
   		console.log("Writing " + filepath + ", " + session._writerBuffer.length);
