@@ -3,7 +3,7 @@
 This project aims on raising privacy awareness. It displays unencrypted 
 traffic over wireless networks in a slideshow manner.
 Interesting content like Facebook photos, ICQ messages or Mail subjects 
-is/should be (still a todo) prioritized.
+should be (still a todo) prioritized.
 
 Caution: Be sure to use the project in a dedicated network, where users are
 informed and aware that everything is displayed on a screen! 
@@ -48,12 +48,18 @@ Install [node.js](https://github.com/joyent/node). I am working with v0.6.6.
 # Filtering
 
 For a publicly visible slideshow of the wifi you might want to set up a 
-blacklist of domains. You can do this by updating the config.js:
+blacklist of domains. You can do this by updating the `config.js`:
 
 	exports.blacklists = ["./some-domains", "./more-domains"]
 
-The list has to be a text file separated by CRLFs. A publicly available
-list is [URLBlacklist](http://urlblacklist.com/) for example.
+The blacklist has to be a text file separated by CRLFs like this:
+	
+	notDisplayed.com
+	neverShown.org
+	...
+	
+A publicly available blacklist is [URLBlacklist](http://urlblacklist.com/) 
+for example.
 
 
 # ToDo
