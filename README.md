@@ -20,7 +20,7 @@ pre-installed apps and let the pupils experiment with them.
 
 **Current state: Definitely Work-In-Progress!**   
 I am developing under Mac OS X and -- as far as I know -- it currently doesn't work
-on other operating systems.
+on other operating systems. On my system it works well though! 
 		
 
 # Install & Run
