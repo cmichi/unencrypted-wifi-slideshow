@@ -24,7 +24,7 @@ if (config.blacklists !== undefined) {
 var sys       = require("util"),
     node_http = require('http'),
     node_url  = require('url'),
-    pcap      = require("./lib/node_pcap/pcap"), 
+    pcap      = require("pcap"), 
 	pcap_session,
 	buffer = require('buffer'),
     ANSI,
@@ -434,7 +434,7 @@ function setup_listeners() {
 					console.log('broadcasting ' + filepath);
 			
 					if (sockets !== undefined && sockets.length > 0) {
-						for (var index in sockets) {
+						for (var index = 0; index < sockets.length; index++) {
 							sockets[index].emit('news', { path: session._path, width : features.width, height : features.height });
 						}
 					}

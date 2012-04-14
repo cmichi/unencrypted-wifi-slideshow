@@ -18,9 +18,8 @@ As part of our presentation we set up a beamer with the slideshow and a dedicate
 wireless network. During the presentation we plan to hand out smartphones with
 pre-installed apps and let the pupils experiment with them.
 
-**Current state: Definitely Work-In-Progress!**   
-I am developing under Mac OS X and -- as far as I know -- it currently doesn't work
-on other operating systems. On my system it works well though! 
+**Current state: Getting better, I consider it still WIP!**   
+Has been succesfully tested in Firefox 10 under Mac OS X and Linux.
 		
 
 # Install & Run
@@ -34,6 +33,7 @@ Install [node.js](https://github.com/joyent/node). I am working with v0.6.6.
 	npm install socket.io
 	npm install express
 	npm install imagemagick	
+	npm install pcap
 	
 	# temporary folder for media content
 	mkdir tmp 
@@ -80,6 +80,12 @@ for example.
  * [socket.io](https://github.com/LearnBoost/socket.io)
  * [imagemagick](https://github.com/rsms/node-imagemagick)
  * [isotope](https://github.com/desandro/isotope)
+
+
+# Changelog
+
+ * April 2012: Timo Haas <haas.timo@uni-ulm.de> kindly proposed some changes 
+which added, among other things, Linux support.
 
 
 # License
