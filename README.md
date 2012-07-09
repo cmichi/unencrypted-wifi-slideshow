@@ -35,6 +35,9 @@ Install [node.js](https://github.com/joyent/node). I am working with v0.6.6.
 	npm install imagemagick	
 	npm install pcap
 	
+	# for URL blacklist etc.
+	touch config.js
+	
 	# temporary folder for media content
 	mkdir tmp 
 		
