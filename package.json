@@ -1,0 +1,19 @@
+{
+  "author": "Michael Müller <mich@elmueller.net>",
+  "homepage": "https://github.com/cmichi/unencrypted-wifi-slideshow",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cmichi/unencrypted-wifi-slideshow.git"
+  },
+  "name": "unencrypted-wifi-slideshow",
+  "description": "Displaying unencrypted traffic over a WiFi in order to raise privacy awareness.",
+  "keywords": ["privacy", "unencrypted wifi"],
+  "license": "MIT",
+  "version": "0.1.0",
+  "dependencies": {
+    "imagemagick": "0.1.2",
+    "pcap": "1.0.x",
+    "express": "2.0.x",
+    "socket.io": "0.8.x"
+  }
+}

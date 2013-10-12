@@ -18,22 +18,23 @@ As part of our presentation we set up a beamer with the slideshow and a dedicate
 wireless network. During the presentation we plan to hand out smartphones with
 pre-installed apps and let the pupils experiment with them.
 
-**Current state: Getting better, I consider it still WIP!**   
+**Current state: Haven't worked on this for a year so. Now I am updating it
+to current libraries!**   
+
 Has been succesfully tested in Firefox 10 under Mac OS X and Linux.
 		
 
 # Install & Run
 
-Install [node.js](https://github.com/joyent/node). I am working with v0.6.6.
+Install [node.js](https://github.com/joyent/node) and libpcap.
+On OSX it should be preinstalled, on Linux it should either be there by
+default or within a package like libpcap-dev: `sudo apt-get install libpcap-dev`.
 
 	git clone https://github.com/cmichi/unencrypted-wifi-slideshow.git
 	cd unencrypted-wifi-slideshow/
 	
 	# Install dependencies
-	npm install socket.io
-	npm install express
-	npm install imagemagick	
-	npm install pcap
+	npm install 
 	
 	# for URL blacklist etc.
 	touch config.js
