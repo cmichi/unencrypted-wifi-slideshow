@@ -13,8 +13,9 @@ var config = require('./config.js');
 
 var blacklists = [];
 if (config.blacklists !== undefined) {
-	console.log('starting');
+	console.log('starting to load blacklists...');
 	for (var index in config.blacklists) {
+		console.log("loading blacklist " + config.blacklists[index])
 		var cnt = fs.readFileSync(config.blacklists[index], 'utf8');
 		var arr = cnt.split('\n');
 		blacklists = blacklists.concat(arr);
@@ -44,6 +45,9 @@ var mime_types = {
 var app = express()
   , server = node_http.createServer(app)
   , io = io.listen(server);
+
+app.use(express.static(__dirname + '/public'));
+//app.listen(1338);
 
 io.configure(function(){
   io.set('log level', 1);

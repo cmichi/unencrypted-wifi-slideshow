@@ -35,15 +35,13 @@ default or within a package like libpcap-dev: `sudo apt-get install libpcap-dev`
 	
 	# Install dependencies
 	npm install 
-	
-	# for URL blacklist etc.
-	touch config.js
-	
-	# temporary folder for media content
-	mkdir tmp 
+	make install
+
+	# optional, see section Filtering below
+	make install-blacklists
 		
-	# start capturing on en1
-	sudo node showit.js -i en1
+	# start capturing on wlan0, 20 MB buffer
+	sudo node showit.js -i wlan0 -b 20
 	
 	# open the graphical frontend in your browser
 	file://.../unencrypted-wifi-slideshow/frontend.html
@@ -52,18 +50,21 @@ default or within a package like libpcap-dev: `sudo apt-get install libpcap-dev`
 # Filtering
 
 For a publicly visible slideshow of the wifi you might want to set up a 
-blacklist of domains. You can do this by updating the `config.js`:
+blacklist of domains. To install the [URLBlacklist](http://urlblacklist.com/) 
+the Makefile provides a handy command: `make install-blacklists`.
+However it will only setup an adult filter, see the `./blacklists/` folder
+for other categories. Please make sure you are within the usage rights of 
+URLBlacklist.
 
-	exports.blacklists = ["./some-domains", "./more-domains"]
+The `config.js` should contain an array of files:
 
-The blacklist has to be a text file separated by CRLFs like this:
+	exports.blacklists = ["./blacklist-domains.txt", "./more-domains.txt"]
+
+The blacklist files have to be a text file separated by CRLFs like this:
 	
 	notDisplayed.com
 	neverShown.org
 	...
-	
-A publicly available blacklist is [URLBlacklist](http://urlblacklist.com/) 
-for example.
 
 
 # ToDo
