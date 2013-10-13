@@ -387,22 +387,10 @@ function setup_listeners() {
 				return;
 			}
 
-			//---------------------
-			// are we sure, that site is not blacklisted?
-			// strip all subdomain stuff (cdn networks, etc.)
-			var host = http.request.headers['Host'].split('.');
-
-			if (host.length >= 2) {
-				host = host.slice(-2).join('.');
-			} else {
-				host = http.request.headers['Host'];
-			}
-
-			if (blacklists.match(host)) {
-				console.log('skipping: ' + host);
+			if (blacklists.match(http.request.headers['Host']) == true) {
+				console.log('skipping ' + http.request.headers['Host']);
 				return;
 			}
-			///-----------------------
 
 			var filepath = tmp_path + session._path;
 
