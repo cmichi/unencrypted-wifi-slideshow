@@ -1,4 +1,4 @@
-var socket = io.connect('http://localhost:1337');
+var socket = io.connect('http://localhost:3000');
 
 var displaying = new Array();
 var queue = new Array();
@@ -41,8 +41,10 @@ $(document).ready(function() {
 
 
 function addNew() {
+			console.log("addNew")
 	if (queue.length < 1) return;
 	if ((data = queue.shift()) == 'undefined') return;
+	console.log("addNew continues")
 		
 	var sizeOptWidth = '0';
 	var sizeOptHeight = '0';
@@ -69,10 +71,14 @@ function addNew() {
 	 		   '<img src="./tmp/' + data.path + '" />' +
 			   '</div>');
 			
+			console.log("add img")
 	if (!displaying.inArray('#' + data.path.match(/^\d+/gi)) && blocking === false) {					
 		blocking = true;		
+			console.log("insert img")
 		insert(item, '#' + id);
 		blocking = false;
+	}else {
+		console.log("skipping")
 	}
 }
 
@@ -130,6 +136,7 @@ Array.prototype.inArray = function(value) {
 
 socket.on('news', function (data) {
 	console.log(data);
+	if (data.width < 48 || data.height < 48) return;
 
 	if (!queue.inArray(data) && !displaying.inArray('#' + data.path.match(/^\d+/gi))) { 
 		queue.push(data);

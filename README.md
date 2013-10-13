@@ -44,7 +44,7 @@ default or within a package like libpcap-dev: `sudo apt-get install libpcap-dev`
 	sudo node showit.js -i wlan0 -b 20
 	
 	# open the graphical frontend in your browser
-	file://.../unencrypted-wifi-slideshow/frontend.html
+	http://localhost:3000/
 
 
 # Filtering

@@ -1,16 +1,43 @@
-/*
-The largest part of this code is taken from the node_pcap module 
-written by Matthew Ranney.
-*/
+/* This code is based on the node_pcap module written by Matthew Ranney. */
 
-/* global process require exports setInterval console */
-
-var im = require('./lib/imagemagick.js');
+var imagemagick = require('./lib/imagemagick.js');
 var io = require('socket.io');
 var express = require('express');
 var fs = require("fs");
-var config = require('./config.js');
+var sys = require("util");
+var http = require('http');
+var pcap = require("pcap");
+var pcap_session;
+var buffer = require('buffer');
+var options = {};
+var cnt = 0;
+//var sockets = [];
+var mime_types = {
+	"image/png" : ".png"
+	, "image/jpeg": ".jpeg"
+	, "image/jpg": ".jpg"
+};
 
+var app = express();
+var server = http.createServer(app);
+var io = io.listen(server);
+
+app.use(express.static(__dirname + '/public'));
+
+io.configure(function(){
+	io.set('log level', 1);
+});
+
+server.listen(3000);
+
+//io.sockets.on('connection', function (socket) {
+	//sockets.push(socket);
+//});
+
+var config = require('./config.js');
+var tmp_path = './public/tmp/';
+
+/* load blacklists */
 var blacklists = [];
 if (config.blacklists !== undefined) {
 	console.log('starting to load blacklists...');
@@ -22,49 +49,10 @@ if (config.blacklists !== undefined) {
 	}
 }
 
-var sys       = require("util"),
-    node_http = require('http'),
-    node_url  = require('url'),
-    pcap      = require("pcap"), 
-	pcap_session,
-	buffer = require('buffer'),
-    ANSI,
-    options   = {};
-
-
-var tmp_path = './tmp/';
-var cnt = 0;
-var sockets = [];
-var mime_types = {
-  "image/png" : ".png",
-  "image/jpeg": ".jpeg",
-  "image/jpg": ".jpg"
-};
-
-
-var app = express()
-  , server = node_http.createServer(app)
-  , io = io.listen(server);
-
-app.use(express.static(__dirname + '/public'));
-//app.listen(1338);
-
-io.configure(function(){
-  io.set('log level', 1);
-});
-
-server.listen(1337);
-
-io.sockets.on('connection', function (socket) {
-	sockets.push(socket);
-});
-
-
-
-ANSI = (function () {
-    // http://en.wikipedia.org/wiki/ANSI_escape_code
+var ANSI = (function () {
+    /* http://en.wikipedia.org/wiki/ANSI_escape_code */
     var formats = {
-        bold: [1, 22], // bright
+	bold: [1, 22], // bright
         light: [2, 22], // faint
         italic: [3, 23],
         underline: [4, 24], // underline single
@@ -107,8 +95,12 @@ function lpad(num, len) {
 function format_timestamp(timems) {
     var date_obj = new Date(timems);
 
-    return ANSI(lpad(date_obj.getHours(), 2) + ":" + lpad(date_obj.getMinutes(), 2) + ":" + lpad(date_obj.getSeconds(), 2) + "." +
-        lpad(date_obj.getMilliseconds(), 3), "blue");
+    return ANSI(
+	lpad(date_obj.getHours(), 2) 
+	+ ":" + lpad(date_obj.getMinutes(), 2) 
+	+ ":" + lpad(date_obj.getSeconds(), 2) + "." 
+        + lpad(date_obj.getMilliseconds(), 3), "blue"
+    );
 }
 
 function format_hostname(hostname) {
@@ -397,7 +389,7 @@ function setup_listeners() {
     });
 
     tcp_tracker.on('http response complete', function (session, http) {
-
+    //console.log("complete response")
 	  if (session._writerBuffer) {
 	      if (session._writerBuffer._pos != session._writerBuffer.length) {
 	        console.log("file was not completely written!");
@@ -419,39 +411,64 @@ function setup_listeners() {
 				return;
 		}
 					
-        var filepath = tmp_path + session._path;
+		var filepath = tmp_path + session._path;
 
   		console.log("Writing " + filepath + ", " + session._writerBuffer.length);
 
+		fs.writeFile(filepath, session._writerBuffer, function(err) {
+			if (err) console.log("err: " + err)
+			console.log("hooray " + filepath)
+
+			ident(filepath);
+		})
+/*
 	     writer = fs.createWriteStream(filepath);
 		writer.on('error', function(err){
 		      console.log('error handled in file reader: ' + err);
 		});
 	
-	      writer.write(session._writerBuffer);
+		writer.on('open', function(fd) {
+		console.log("open " + filepath);
+		      var r = writer.write(session._writerBuffer);
+		      console.log("write: " + r);
+
+		      if (r) {
+				ident(filepath, session)
+		      }
+	      })
 
 	      writer.on("drain", function() {
+		console.log("drain");
 			writer.end();
 			delete session._writerBuffer;
 
-			console.log(filepath + " written")
-			im.identify(filepath, function(err, features){
-				if (!err) {
-					console.log('broadcasting ' + filepath);
-			
-					if (sockets !== undefined && sockets.length > 0) {
-						for (var index = 0; index < sockets.length; index++) {
-							sockets[index].emit('news', { path: session._path, width : features.width, height : features.height });
-						}
-					}
-				} else {
-					console.log(err)
-				}
-			})	
+			ident(filepath, session)
 	      });
+	      */
 	    }	
     });
 
+}
+
+function ident(filepath, session) {
+	console.log(filepath + " written")
+	var path = filepath.replace("./public/tmp/","");
+	imagemagick.identify(filepath, function(err, features){
+		if (!err) {
+			console.log('broadcasting ' + path + " to " + io.sockets.clients().length);
+			io.sockets.emit('news', { "path": path, width : features.width, height : features.height });
+
+/*
+			if (sockets !== undefined && sockets.length > 0) {
+				for (var index = 0; index < sockets.length; index++) {
+					sockets[index].emit('news', { path: filepath, width : features.width, height : features.height });
+				}
+			}
+			*/
+		} else {
+			console.log(err)
+		}
+	})	
 }
 
 // Make it all go
@@ -462,9 +479,6 @@ if (options.help) {
 start_capture_session();
 start_drop_watcher();
 setup_listeners();
-
-
-
 
 Array.prototype.inArray = function(value) {
 	if (this === null) return false;

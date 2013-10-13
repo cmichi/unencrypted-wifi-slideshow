@@ -1,9 +1,10 @@
 default: install
 
 install:
-	mkdir ./tmp/
 	touch config.js
 
+clean:
+	sudo rm ./public/tmp/*
 
 install-blacklists:
 	# Please make sure you are within the usage rights of URLBlacklist
