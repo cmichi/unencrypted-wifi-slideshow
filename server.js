@@ -1,6 +1,8 @@
 /* This code is based on the node_pcap module written by Matthew Ranney. */
 
 var imagemagick = require('./lib/imagemagick.js');
+var blacklists = require('./lib/blacklists.js');
+
 var io = require('socket.io');
 var express = require('express');
 var fs = require("fs");
@@ -11,7 +13,6 @@ var pcap_session;
 var buffer = require('buffer');
 var options = {};
 var cnt = 0;
-//var sockets = [];
 var mime_types = {
 	"image/png" : ".png"
 	, "image/jpeg": ".jpeg"
@@ -30,24 +31,11 @@ io.configure(function(){
 
 server.listen(3000);
 
-//io.sockets.on('connection', function (socket) {
-	//sockets.push(socket);
-//});
-
 var config = require('./config.js');
 var tmp_path = './public/tmp/';
 
-/* load blacklists */
-var blacklists = [];
-if (config.blacklists !== undefined) {
-	console.log('starting to load blacklists...');
-	for (var index in config.blacklists) {
-		console.log("loading blacklist " + config.blacklists[index])
-		var cnt = fs.readFileSync(config.blacklists[index], 'utf8');
-		var arr = cnt.split('\n');
-		blacklists = blacklists.concat(arr);
-	}
-}
+if (config.blacklists !== undefined) 
+	blacklists.load(config.blacklists);
 
 var ANSI = (function () {
     /* http://en.wikipedia.org/wiki/ANSI_escape_code */
@@ -175,7 +163,6 @@ function usage_die(message) {
     sys.error("HTTP output:");
     sys.error("    --headers                print headers of request and response (def: off)");
     sys.error("    --bodies                 print request and response bodies, if any (def: off)");
-//    sys.error("    --group                  group all output for req/res (def: progressive)");
     sys.error("    --tcp-verbose            display TCP events (def: off)");
     sys.error("    --no-color               disable ANSI colors (def: pretty colors on)");
     sys.error("");
@@ -206,7 +193,6 @@ function parse_options() {
         "user-agent": { multiple: true, has_value: true, regex: true },
         "headers": { multiple: false, has_value: false },
         "bodies": { multiple: false, has_value: false },
-//        "group": { multiple: false, has_value: false },
         "tcp-verbose": { multiple: false, has_value: false },
         "no-color": { multiple: false, has_value: false },
         "help": { multiple: false, has_value: false }
@@ -406,7 +392,7 @@ function setup_listeners() {
 			host = http.request.headers['Host'];
 		}
 		
-		if (blacklists.inArray(host)) {
+		if (blacklists.match(host)) {
 				console.log('skipping: ' + host);
 				return;
 		}
@@ -423,30 +409,6 @@ function setup_listeners() {
 
 			ident(filepath);
 		})
-/*
-	     writer = fs.createWriteStream(filepath);
-		writer.on('error', function(err){
-		      console.log('error handled in file reader: ' + err);
-		});
-	
-		writer.on('open', function(fd) {
-		console.log("open " + filepath);
-		      var r = writer.write(session._writerBuffer);
-		      console.log("write: " + r);
-
-		      if (r) {
-				ident(filepath, session)
-		      }
-	      })
-
-	      writer.on("drain", function() {
-		console.log("drain");
-			writer.end();
-			delete session._writerBuffer;
-
-			ident(filepath, session)
-	      });
-	      */
 	    }	
     });
 
@@ -454,20 +416,12 @@ function setup_listeners() {
 
 function ident(filepath, session) {
 	console.log(filepath + " written")
-	console.log("")
 	var path = filepath.replace("./public/tmp/","");
 	imagemagick.identify(filepath, function(err, features){
 		if (!err) {
 			console.log('broadcasting ' + path + " to " + io.sockets.clients().length);
 			io.sockets.emit('news', { "path": path, width : features.width, height : features.height });
-
-/*
-			if (sockets !== undefined && sockets.length > 0) {
-				for (var index = 0; index < sockets.length; index++) {
-					sockets[index].emit('news', { path: filepath, width : features.width, height : features.height });
-				}
-			}
-			*/
+	console.log("")
 		} else {
 			console.log(err)
 		}
@@ -479,21 +433,7 @@ parse_options();
 if (options.help) {
     usage_die();
 }
+
 start_capture_session();
 start_drop_watcher();
 setup_listeners();
-
-Array.prototype.inArray = function(value) {
-	if (this === null) return false;
-	
-	if (this.length === 0) {
-		return false;
-	}
-		
-	for (var index in this) {
-		if (this[index] === value) {
-			return true;
-		}
-	}
-	return false;
-}	
