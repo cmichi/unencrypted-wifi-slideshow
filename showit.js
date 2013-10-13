@@ -3,9 +3,9 @@ The largest part of this code is taken from the node_pcap module
 written by Matthew Ranney.
 */
 
-/*global process require exports setInterval console */
+/* global process require exports setInterval console */
 
-var im = require('imagemagick');
+var im = require('./lib/imagemagick.js');
 var io = require('socket.io');
 var express = require('express');
 var fs = require("fs");
@@ -41,14 +41,15 @@ var mime_types = {
 };
 
 
-var app = express.createServer()
-  , io = io.listen(app);
+var app = express()
+  , server = node_http.createServer(app)
+  , io = io.listen(server);
 
 io.configure(function(){
   io.set('log level', 1);
 });
 
-app.listen(1337);
+server.listen(1337);
 
 io.sockets.on('connection', function (socket) {
 	sockets.push(socket);
@@ -424,11 +425,12 @@ function setup_listeners() {
 		});
 	
 	      writer.write(session._writerBuffer);
-	
+
 	      writer.on("drain", function() {
-	        writer.end();
+			writer.end();
 			delete session._writerBuffer;
-	
+
+			console.log(filepath + " written")
 			im.identify(filepath, function(err, features){
 				if (!err) {
 					console.log('broadcasting ' + filepath);
@@ -442,8 +444,6 @@ function setup_listeners() {
 					console.log(err)
 				}
 			})	
-		
-	       
 	      });
 	    }	
     });
