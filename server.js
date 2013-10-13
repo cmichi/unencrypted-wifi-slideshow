@@ -413,11 +413,13 @@ function setup_listeners() {
 					
 		var filepath = tmp_path + session._path;
 
+	      console.log("");
   		console.log("Writing " + filepath + ", " + session._writerBuffer.length);
 
 		fs.writeFile(filepath, session._writerBuffer, function(err) {
 			if (err) console.log("err: " + err)
 			console.log("hooray " + filepath)
+			delete session._writerBuffer;
 
 			ident(filepath);
 		})
@@ -452,6 +454,7 @@ function setup_listeners() {
 
 function ident(filepath, session) {
 	console.log(filepath + " written")
+	console.log("")
 	var path = filepath.replace("./public/tmp/","");
 	imagemagick.identify(filepath, function(err, features){
 		if (!err) {

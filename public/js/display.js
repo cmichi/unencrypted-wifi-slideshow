@@ -41,7 +41,6 @@ $(document).ready(function() {
 
 
 function addNew() {
-			console.log("addNew")
 	if (queue.length < 1) return;
 	if ((data = queue.shift()) == 'undefined') return;
 	console.log("addNew continues")
